@@ -9,6 +9,7 @@ import pickle
 from vision import *
 import replay
 from settings import *
+import visualize
 
 counter = 0
 all_time_max_fitness = 0
@@ -176,10 +177,10 @@ def eval_genomes(genomes,config):
             os.mkdir(folder_name)
 
         with open(folder_name + '/genome', 'wb') as f:
-            pickle.dump(genome, f)
+            pickle.dump(genome_to_play, f)
         with open(folder_name + '/seed', 'wb') as f:
-            pickle.dump(saved_seed,f)
-        print("SAVED ALL TIME HIGH AT: ","{:e}".format(all_time_max_fitness)," | eaten: ", eaten)
+            pickle.dump(seed_to_play,f)
+        print(all_time_max_fitness)
         replay.play(genome_to_play,seed_to_play)
     play = False
     counter += 1
@@ -212,3 +213,5 @@ if __name__ == "__main__":
 
     with open(dir_save + '/winner-snake','wb') as f:
         pickle.dump(winner,f)
+
+    visualize.plot_stats(stats, ylog=False, view=True)

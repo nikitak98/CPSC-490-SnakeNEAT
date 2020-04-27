@@ -121,9 +121,6 @@ def eval_genomes(genomes,config):
             output = net.activate(input)
             direction = output.index(max([i for i in output]))
 
-            #print(input)
-            #print(output)
-
             # Spawn Food
             if snake_body[0] == food:
                 hunger = 100

@@ -49,7 +49,7 @@ def eval_genomes(genomes,config):
         run = True
 
         eaten = 0
-        hunger = 100
+        hunger = max_hunger
         steps = 0
         max_score = 0
 
@@ -123,7 +123,7 @@ def eval_genomes(genomes,config):
 
             # Spawn Food
             if snake_body[0] == food:
-                hunger = 100
+                hunger = max_hunger
                 eaten += 1
                 if len(snake_body) == 99:
                     print("WINNER!!!")

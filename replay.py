@@ -49,7 +49,7 @@ def play(genome,s = None):
 
     run = True
     eaten = 0
-    hunger = 100
+    hunger = max_hunger
     steps = 0
 
     pygame.time.set_timer(pygame.USEREVENT, tick_rate)
@@ -128,7 +128,7 @@ def play(genome,s = None):
             # Spawn Food
             if snake_body[0] == food:
                 eaten += 1
-                hunger = 100
+                hunger = max_hunger
                 if len(snake_body) == 99:
                     run = False
                 else:

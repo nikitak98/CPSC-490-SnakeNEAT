@@ -12,21 +12,21 @@ from settings import *
 
 counter = 0
 all_time_max_fitness = 0
+seed_to_play = None
+genome_to_play = None
+play = False
+
 dir_save = 'run' + str(datetime.datetime.now())
 
 def eval_genomes(genomes,config):
 
-    global width
-    global height
-    global block_size
-    global screen
-    global tick_rate
     global counter
     global snake_color
     global all_time_max_fitness
+    global seed_to_play
+    global genome_to_play
+    global play
     global dir_save
-
-    max_fitness = 0
 
     for genome_id, genome in genomes:
 
@@ -162,23 +162,26 @@ def eval_genomes(genomes,config):
             steps += 1
 
         genome.fitness = steps + 100 * eaten ** 2
-        if genome.fitness > max_fitness:
-            max_fitness = genome.fitness
-            max_score = eaten
         if genome.fitness > all_time_max_fitness:
+            play = True
             all_time_max_fitness = genome.fitness
+            seed_to_play = saved_seed
+            genome_to_play = genome
 
-            folder_name = dir_save + '/generation' + str(counter)
-            if not os.path.exists(folder_name):
-                os.mkdir(folder_name)
 
-            with open(folder_name + '/genome', 'wb') as f:
-                pickle.dump(genome, f)
-            with open(folder_name + '/seed', 'wb') as f:
-                pickle.dump(saved_seed,f)
-            print("SAVED ALL TIME HIGH AT: ","{:e}".format(all_time_max_fitness)," | eaten: ", eaten)
-            #replay.play(genome,saved_seed)
 
+    if play:
+        folder_name = dir_save + '/generation' + str(counter)
+        if not os.path.exists(folder_name):
+            os.mkdir(folder_name)
+
+        with open(folder_name + '/genome', 'wb') as f:
+            pickle.dump(genome, f)
+        with open(folder_name + '/seed', 'wb') as f:
+            pickle.dump(saved_seed,f)
+        print("SAVED ALL TIME HIGH AT: ","{:e}".format(all_time_max_fitness)," | eaten: ", eaten)
+        replay.play(genome_to_play,seed_to_play)
+    play = False
     counter += 1
 
 if __name__ == "__main__":

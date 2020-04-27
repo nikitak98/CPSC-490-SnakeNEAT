@@ -122,18 +122,8 @@ def play(genome,s = None):
             input[23] = vision[1]
             input[31] = vision[2]
 
-
-            #print(input, "score: ",score)
             output = winner_net.activate(input)
-            new_direction = output.index(max([i for i in output]))
-            if output == 4*[0.0]: # Don't need this if starting with full connection
-                pass
-            elif abs(new_direction - direction) == 2:
-                output[new_direction] = min(output)-1
-                direction = output.index(max([i for i in output]))
-            else:
-                direction = new_direction
-
+            direction = output.index(max([i for i in output]))
 
             # Spawn Food
             if snake_body[0] == food:

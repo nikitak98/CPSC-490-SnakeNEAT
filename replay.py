@@ -8,7 +8,6 @@ import visualize
 import numpy as np
 import pickle
 from vision import *
-from game import direction_to_dxdy, look_direction
 from settings import *
 
 def play(genome,s = None):
@@ -65,7 +64,6 @@ def play(genome,s = None):
             input[direction] = 1
 
             # TAIL DIRECTION
-            tail_direction = -1
             body_len = len(snake_body)
             (tail_x,tail_y) = snake_body[body_len-1]
             (tail2_x,tail2_y) = snake_body[body_len-2]
@@ -125,20 +123,6 @@ def play(genome,s = None):
             output = winner_net.activate(input)
             direction = output.index(max([i for i in output]))
 
-            # Spawn Food
-            if snake_body[0] == food:
-                eaten += 1
-                hunger = max_hunger
-                if len(snake_body) == 99:
-                    run = False
-                else:
-                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
-                    while snake_body.count(food) > 0:
-                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
-            else:
-                hunger -= 1
-                snake_body.pop()
-
             # Update body
             if direction == 0:
                 snake_body.appendleft((snake_body[0][0],snake_body[0][1] + block_size))
@@ -158,6 +142,20 @@ def play(genome,s = None):
             # Check collision
             if snake_body.count(snake_body[0]) > 1:
                 run = False
+
+            # Spawn Food
+            if snake_body[0] == food:
+                eaten += 1
+                hunger = max_hunger
+                if len(snake_body) == 100:
+                    run = False
+                else:
+                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+                    while snake_body.count(food) > 0:
+                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+            else:
+                hunger -= 1
+                snake_body.pop()
 
             if hunger <= 0:
                 run = False

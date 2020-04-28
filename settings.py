@@ -2,9 +2,9 @@
 tick_rate = 1
 
 # World Dimensions
-width = 200
-height = 200
-block_size = 20
+width = 400
+height = 400
+block_size = 40
 
 # Visuals
 snake_color = (255,0,0)

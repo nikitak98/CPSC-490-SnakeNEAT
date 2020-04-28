@@ -10,3 +10,5 @@ class Snake:
         self.head = (random.randint(2,width/block_size - 3)*block_size,random.randint(2,height/block_size - 3)*block_size)
         self.body = collections.deque([self.head,(self.head[0]+block_size*-direction_to_dxdy(direction)[0],self.head[1]+block_size*-direction_to_dxdy(direction)[1]),(self.head[0]+block_size*2*-direction_to_dxdy(direction)[0],self.head[1]+block_size*2*-direction_to_dxdy(direction)[1])])
         self.hunger = max_hunger
+
+    def move(direction):

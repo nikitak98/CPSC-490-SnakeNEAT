@@ -62,7 +62,6 @@ def eval_genomes(genomes,config):
             input[direction] = 1
 
             # TAIL DIRECTION
-            tail_direction = -1
             body_len = len(snake_body)
             (tail_x,tail_y) = snake_body[body_len-1]
             (tail2_x,tail2_y) = snake_body[body_len-2]
@@ -122,21 +121,6 @@ def eval_genomes(genomes,config):
             output = net.activate(input)
             direction = output.index(max([i for i in output]))
 
-            # Spawn Food
-            if snake_body[0] == food:
-                hunger = max_hunger
-                eaten += 1
-                if len(snake_body) == 99:
-                    print("WINNER!!!")
-                    run = False
-                else:
-                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
-                    while snake_body.count(food) > 0:
-                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
-            else:
-                hunger -= 1
-                snake_body.pop() # Remove last block of snake to prepare for update
-
             # Update body
             if direction == 0:
                 snake_body.appendleft((snake_body[0][0],snake_body[0][1] + block_size))
@@ -157,6 +141,22 @@ def eval_genomes(genomes,config):
             if snake_body.count(snake_body[0]) > 1:
                 run = False
 
+            # Check if in Food
+            if snake_body[0] == food:
+                hunger = max_hunger
+                eaten += 1
+                if len(snake_body) == 100:
+                    print("WINNER!!!")
+                    run = False
+                else:
+                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+                    while snake_body.count(food) > 0:
+                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+            else: # If not spawn new food
+                hunger -= 1
+                snake_body.pop() # Remove last block of snake to prepare for update
+
+            # Check if dead
             if hunger <= 0:
                 run = False
 
@@ -168,8 +168,6 @@ def eval_genomes(genomes,config):
             all_time_max_fitness = genome.fitness
             seed_to_play = saved_seed
             genome_to_play = genome
-
-
 
     if play:
         folder_name = dir_save + '/generation' + str(counter)
@@ -209,9 +207,10 @@ if __name__ == "__main__":
     p.add_reporter(stats)
     p.add_reporter(neat.Checkpointer(100,filename_prefix = dir_save + '/neat-checkpoint-'))
 
-    winner = p.run(eval_genomes,500)
+    winner = p.run(eval_genomes,1000)
 
     with open(dir_save + '/winner-snake','wb') as f:
         pickle.dump(winner,f)
 
     visualize.plot_stats(stats, ylog=False, view=True)
+    visualize.plot_species(stats, view=True)

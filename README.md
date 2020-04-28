@@ -6,3 +6,6 @@ python3 game.py [--load-checkpoint file_name]
 
 ### Using replay.py
 python3 replay.py genome_file [seed_file]
+
+![fig1](img/Figure_1.png)
+![fig2](img/Figure_2.png)

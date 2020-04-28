@@ -145,7 +145,7 @@ def eval_genomes(genomes,config):
             if snake_body[0] == food:
                 hunger = max_hunger
                 eaten += 1
-                if len(snake_body) == 100:
+                if len(snake_body) == world_size:
                     print("WINNER!!!")
                     run = False
                 else:
@@ -212,5 +212,6 @@ if __name__ == "__main__":
     with open(dir_save + '/winner-snake','wb') as f:
         pickle.dump(winner,f)
 
+    # For these to work please install matplotlib
     visualize.plot_stats(stats, ylog=False, view=True)
     visualize.plot_species(stats, view=True)

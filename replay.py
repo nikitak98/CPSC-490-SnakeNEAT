@@ -147,7 +147,7 @@ def play(genome,s = None):
             if snake_body[0] == food:
                 eaten += 1
                 hunger = max_hunger
-                if len(snake_body) == 100:
+                if len(snake_body) == world_size:
                     run = False
                 else:
                     food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)

@@ -40,17 +40,22 @@ def eval_genomes(genomes,config):
 
 
 
-        # Initial Parameters of Snake
+        # Snake
         direction = random.randint(0,3)
-        snake_head_initial = (random.randint(2,width/block_size - 3)*block_size,random.randint(2,height/block_size - 3)*block_size)
+        snake_head_initial = (random.randint(2,width/block_size - 3)*block_size,\
+                            random.randint(2,height/block_size - 3)*block_size)
         snake_body = collections.deque([snake_head_initial])
-        snake_body.append((snake_head_initial[0] + block_size * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * -dxdy_four(direction)[1]))
-        snake_body.append((snake_head_initial[0] + block_size * 2 * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * 2 * -dxdy_four(direction)[1]))
+        snake_body.append((snake_head_initial[0] + block_size * -dxdy_four(direction)[0],\
+                        snake_head_initial[1] + block_size * -dxdy_four(direction)[1]))
+        snake_body.append((snake_head_initial[0] + block_size * 2 * -dxdy_four(direction)[0],\
+                        snake_head_initial[1] + block_size * 2 * -dxdy_four(direction)[1]))
 
         # Food
-        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
+        food = (random.randint(0,width/block_size - 1)*block_size,\
+                random.randint(0,height/block_size - 1)*block_size)
         while snake_body.count(food) > 0:
-            food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
+            food = (random.randint(0,width/block_size - 1)*block_size,\
+                    random.randint(0,height/block_size - 1)*block_size)
 
         net = neat.nn.FeedForwardNetwork.create(genome,config)
         run = True

@@ -1,7 +1,10 @@
 import numpy as np
+
 from settings import *
 
-def look_direction(x_direction,y_direction,snake,food):
+def look_direction(direction,snake,food):
+
+    (x_direction,y_direction) = dxdy_eight(direction)
 
     distance_to_wall = 0.0
     distance_to_food = np.inf
@@ -37,7 +40,7 @@ def look_direction(x_direction,y_direction,snake,food):
 
     return (distance_to_wall,distance_to_food,distance_to_body)
 
-def direction_to_dxdy(direction):
+def dxdy_four(direction):
 
     if direction == 0:
         (dx,dy) = (0,1)
@@ -47,5 +50,26 @@ def direction_to_dxdy(direction):
         (dx,dy) = (0,-1)
     if direction == 3:
         (dx,dy) = (1,0)
+
+    return (dx,dy)
+
+def dxdy_eight(direction):
+
+    if direction == 0:
+        (dx,dy) = (0,1)
+    if direction == 1:
+        (dx,dy) = (-1,1)
+    if direction == 2:
+        (dx,dy) = (-1,0)
+    if direction == 3:
+        (dx,dy) = (-1,-1)
+    if direction == 4:
+        (dx,dy) = (0,-1)
+    if direction == 5:
+        (dx,dy) = (1,-1)
+    if direction == 6:
+        (dx,dy) = (1,0)
+    if direction == 7:
+        (dx,dy) = (1,1)
 
     return (dx,dy)

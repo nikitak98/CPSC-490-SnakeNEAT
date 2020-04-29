@@ -1,12 +1,13 @@
 import os
+import sys
+import random
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame, random, sys
+
+import pygame
 import collections
 import neat
-import math
-import visualize
-import numpy as np
 import pickle
+
 from vision import *
 from settings import *
 
@@ -34,7 +35,9 @@ def play(genome,s = None):
 
     # Initial Parameters of Snake
     snake_head_initial = (random.randint(2,width/block_size - 3)*block_size,random.randint(2,height/block_size - 3)*block_size)
-    snake_body = collections.deque([snake_head_initial,(snake_head_initial[0]+block_size*-direction_to_dxdy(direction)[0],snake_head_initial[1]+block_size*-direction_to_dxdy(direction)[1]),(snake_head_initial[0]+block_size*2*-direction_to_dxdy(direction)[0],snake_head_initial[1]+block_size*2*-direction_to_dxdy(direction)[1])])
+    snake_body = collections.deque([snake_head_initial])
+    snake_body.append((snake_head_initial[0] + block_size * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * -dxdy_four(direction)[1]))
+    snake_body.append((snake_head_initial[0] + block_size * 2 * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * 2 * -dxdy_four(direction)[1]))
 
     # Food
     food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
@@ -60,6 +63,8 @@ def play(genome,s = None):
         if event.type == pygame.USEREVENT:
 
             # NN Inputs [4 x Head Direction, 8 x 3 x Vision (Wall Dist,Food,Body]
+
+            # HEAD DIRECTION
             input = 32 * [0]
             input[direction] = 1
 
@@ -79,46 +84,10 @@ def play(genome,s = None):
                     input[7] = 1
 
             # VISION
-            # Clockwise starting from Down
-            vision = look_direction(0,1,snake_body,food)
-            input[8] = vision[0]
-            input[16] = vision[1]
-            input[24] = vision[2]
-
-            vision = look_direction(-1,1,snake_body,food)
-            input[9] = vision[0]
-            input[17] = vision[1]
-            input[25] = vision[2]
-
-            vision = look_direction(-1,0,snake_body,food)
-            input[10] = vision[0]
-            input[18] = vision[1]
-            input[26] = vision[2]
-
-            vision = look_direction(-1,-1,snake_body,food)
-            input[11] = vision[0]
-            input[19] = vision[1]
-            input[27] = vision[2]
-
-            vision = look_direction(0,-1,snake_body,food)
-            input[12] = vision[0]
-            input[20] = vision[1]
-            input[28] = vision[2]
-
-            vision = look_direction(1,-1,snake_body,food)
-            input[13] = vision[0]
-            input[21] = vision[1]
-            input[29] = vision[2]
-
-            vision = look_direction(1,0,snake_body,food)
-            input[14] = vision[0]
-            input[22] = vision[1]
-            input[30] = vision[2]
-
-            vision = look_direction(1,1,snake_body,food)
-            input[15] = vision[0]
-            input[23] = vision[1]
-            input[31] = vision[2]
+            for i in range(0,8):
+                vision = look_direction(i,snake_body,food)
+                for j in range(0,3):
+                    input[8 + i + j*8] = vision[j]
 
             output = winner_net.activate(input)
             direction = output.index(max([i for i in output]))

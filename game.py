@@ -37,18 +37,20 @@ def eval_genomes(genomes,config):
         # 0 = Down, 1 = Left, 2 = Up, 3 = Right
         saved_seed = random.randint(-sys.maxsize,sys.maxsize)
         random.seed(saved_seed)
-        direction = random.randint(0,3)
+
+
 
         # Initial Parameters of Snake
+        direction = random.randint(0,3)
         snake_head_initial = (random.randint(2,width/block_size - 3)*block_size,random.randint(2,height/block_size - 3)*block_size)
         snake_body = collections.deque([snake_head_initial])
         snake_body.append((snake_head_initial[0] + block_size * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * -dxdy_four(direction)[1]))
         snake_body.append((snake_head_initial[0] + block_size * 2 * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * 2 * -dxdy_four(direction)[1]))
 
         # Food
-        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
         while snake_body.count(food) > 0:
-            food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+            food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
 
         net = neat.nn.FeedForwardNetwork.create(genome,config)
         run = True
@@ -70,15 +72,15 @@ def eval_genomes(genomes,config):
             body_len = len(snake_body)
             (tail_x,tail_y) = snake_body[body_len-1]
             (tail2_x,tail2_y) = snake_body[body_len-2]
-            if tail_x == tail2_x: #UP/DOWN
-                if tail_y > tail2_y: # UP
+            if tail_x == tail2_x:
+                if tail_y > tail2_y:
                     input[6] = 1
-                else: #DOWN
+                else:
                     input[4] = 1
-            else: #LEFT/RIGHT
-                if tail_x > tail2_x: # LEFT
+            else:
+                if tail_x > tail2_x:
                     input[5] = 1
-                else: # RIGHT
+                else:
                     input[7] = 1
 
             # VISION
@@ -101,9 +103,9 @@ def eval_genomes(genomes,config):
                 snake_body.appendleft((snake_body[0][0] + block_size,snake_body[0][1]))
 
             # Check out of bounds
-            if snake_body[0][0] < 0 or snake_body[0][0] > width - block_size/2:
+            if snake_body[0][0] < 0 or snake_body[0][0] >= width:
                 run = False
-            if snake_body[0][1] < 0 or snake_body[0][1] > width - block_size/2:
+            if snake_body[0][1] < 0 or snake_body[0][1] >= height:
                 run = False
 
             # Check collision
@@ -118,9 +120,9 @@ def eval_genomes(genomes,config):
                     print("WINNER!!!")
                     run = False
                 else:
-                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
                     while snake_body.count(food) > 0:
-                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
             else: # If not spawn new food
                 hunger -= 1
                 snake_body.pop() # Remove last block of snake
@@ -132,6 +134,8 @@ def eval_genomes(genomes,config):
             steps += 1
 
         genome.fitness = steps + 100 * eaten ** 2
+        #genome.fitness = steps + 5000*(((0.0002*steps) ** 2) - ((0.0002*steps) ** 3)) + (100 * eaten ** 2)
+        #genome.fitness = (100 * (eaten**2)) - ((steps-7000) ** 2)/100 + 490000 - 100*((steps-50)**2) + 250000
         if genome.fitness > all_time_max_fitness:
             play = True
             all_time_max_fitness = genome.fitness

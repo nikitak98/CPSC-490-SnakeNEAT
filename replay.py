@@ -40,13 +40,15 @@ def play(genome,s = None):
     snake_body.append((snake_head_initial[0] + block_size * 2 * -dxdy_four(direction)[0],snake_head_initial[1] + block_size * 2 * -dxdy_four(direction)[1]))
 
     # Food
-    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
     while snake_body.count(food) > 0:
-        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
 
     pygame.draw.rect(screen,food_color,(food[0],food[1],block_size-1,block_size-1))
+    pygame.draw.rect(screen,snake_head_color,(snake_body[0][0],snake_body[0][1],block_size-1,block_size-1))
     for (x,y) in snake_body:
-        pygame.draw.rect(screen,snake_color,(x,y,block_size-1,block_size-1))
+        if (x,y) != snake_body[0]:
+            pygame.draw.rect(screen,snake_color,(x,y,block_size-1,block_size-1))
     pygame.display.update()
 
     run = True
@@ -103,9 +105,9 @@ def play(genome,s = None):
                 snake_body.appendleft((snake_body[0][0] + block_size,snake_body[0][1]))
 
             # Check out of bounds
-            if snake_body[0][0] < 0 or snake_body[0][0] > width - block_size/2:
+            if snake_body[0][0] < 0 or snake_body[0][0] >= width:
                 run = False
-            if snake_body[0][1] < 0 or snake_body[0][1] > width - block_size/2:
+            if snake_body[0][1] < 0 or snake_body[0][1] >= height:
                 run = False
 
             # Check collision
@@ -119,9 +121,9 @@ def play(genome,s = None):
                 if len(snake_body) == world_size:
                     run = False
                 else:
-                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
                     while snake_body.count(food) > 0:
-                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,width/block_size - 1)*block_size)
+                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
             else:
                 hunger -= 1
                 snake_body.pop()
@@ -131,9 +133,10 @@ def play(genome,s = None):
 
             screen.fill(background_color)
             pygame.draw.rect(screen,food_color,(food[0],food[1],block_size-1,block_size-1))
+            pygame.draw.rect(screen,snake_head_color,(snake_body[0][0],snake_body[0][1],block_size-1,block_size-1))
             for (x,y) in snake_body:
-                pygame.draw.rect(screen,snake_color,(x,y,block_size-1,block_size-1))
-
+                if (x,y) != snake_body[0]:
+                    pygame.draw.rect(screen,snake_color,(x,y,block_size-1,block_size-1))
             pygame.display.update()
 
             steps += 1

@@ -151,8 +151,6 @@ def play(genome,s = None):
 
             steps += 1
 
-    print("FITNESS:", steps + eaten *100)
-
 if __name__ == '__main__':
 
     if len(sys.argv) < 2:

@@ -141,7 +141,7 @@ def eval_genomes(genomes,config):
         genome.fitness = steps + eaten * 100
         #genome.fitness = steps + 100 * eaten ** 2
         #genome.fitness = steps + 5000*(((0.0002*steps) ** 2) - ((0.0002*steps) ** 3)) + (100 * eaten ** 2)
-        ##genome.fitness = (100 * (eaten**2)) - ((steps-7000) ** 2)/100 + 490000 - 100*((steps-50)**2) + 250000
+
         if genome.fitness > all_time_max_fitness:
             play = True
             all_time_max_fitness = genome.fitness
@@ -192,5 +192,6 @@ if __name__ == "__main__":
         pickle.dump(winner,f)
 
     # For these to work please install matplotlib
+    visualize.draw_net(config, winner, True)
     visualize.plot_stats(stats, ylog=False, view=True)
     visualize.plot_species(stats, view=True)

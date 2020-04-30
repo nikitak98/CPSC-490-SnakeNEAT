@@ -4,3 +4,5 @@ old/
 get_stats.py
 Final Report.docx
 plot.py
+website/
+.DS_Store

@@ -38,8 +38,6 @@ def eval_genomes(genomes,config):
         saved_seed = random.randint(-sys.maxsize,sys.maxsize)
         random.seed(saved_seed)
 
-
-
         # Snake
         direction = random.randint(0,3)
         snake_head_initial = (random.randint(2,width/block_size - 3)*block_size,\
@@ -125,9 +123,11 @@ def eval_genomes(genomes,config):
                     print("WINNER!!!")
                     run = False
                 else:
-                    food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
+                    food = (random.randint(0,width/block_size - 1)*block_size,\
+                            random.randint(0,height/block_size - 1)*block_size)
                     while snake_body.count(food) > 0:
-                        food = (random.randint(0,width/block_size - 1)*block_size,random.randint(0,height/block_size - 1)*block_size)
+                        food = (random.randint(0,width/block_size - 1)*block_size,\
+                                random.randint(0,height/block_size - 1)*block_size)
             else: # If not spawn new food
                 hunger -= 1
                 snake_body.pop() # Remove last block of snake
@@ -138,9 +138,10 @@ def eval_genomes(genomes,config):
 
             steps += 1
 
-        genome.fitness = steps + 100 * eaten ** 2
+        genome.fitness = steps + eaten * 100
+        #genome.fitness = steps + 100 * eaten ** 2
         #genome.fitness = steps + 5000*(((0.0002*steps) ** 2) - ((0.0002*steps) ** 3)) + (100 * eaten ** 2)
-        #genome.fitness = (100 * (eaten**2)) - ((steps-7000) ** 2)/100 + 490000 - 100*((steps-50)**2) + 250000
+        ##genome.fitness = (100 * (eaten**2)) - ((steps-7000) ** 2)/100 + 490000 - 100*((steps-50)**2) + 250000
         if genome.fitness > all_time_max_fitness:
             play = True
             all_time_max_fitness = genome.fitness

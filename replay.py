@@ -31,7 +31,6 @@ def play(genome,s = None):
     else:
         saved_seed = int(s)
     random.seed(saved_seed)
-    direction = random.randint(0,3)
 
     # Snake
     direction = random.randint(0,3)
@@ -151,6 +150,8 @@ def play(genome,s = None):
             pygame.display.update()
 
             steps += 1
+
+    print("FITNESS:", steps + eaten *100)
 
 if __name__ == '__main__':
 

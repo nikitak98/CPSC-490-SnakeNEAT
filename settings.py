@@ -1,5 +1,5 @@
 # Replay Speed
-tick_rate = 50
+tick_rate = 1
 
 # World Dimensions
 width = 200
